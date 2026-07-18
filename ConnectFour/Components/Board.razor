@@ -61,6 +61,7 @@
     private string[] pieces = new string[42];
     private string winnerMessage = string.Empty;
     private int winner = 0;
+    private int alreadywon = 0;
     private string errorMessage = string.Empty;
 
     private string CurrentTurn => (winnerMessage == string.Empty) ? $"Player {State.PlayerTurn}'s Turn" : "";
@@ -100,10 +101,12 @@
             GameState.WinState.Tie => 0,
             _ => 0
         };
-        if(winner == 1){
+        if(winner == 1 && alreadywon == 0){
             Player1Wins += 1;
-        } else if (winner == 2){
+            alreadywon = 1;
+        } else if (winner == 2 && alreadywon == 0){
             Player2Wins += 1;
+            alreadywon = 1;
         }
         winnerMessage = State.CheckForWin() switch
         {
@@ -119,6 +122,7 @@
         winnerMessage = string.Empty;
         errorMessage = string.Empty;
         winner = 0;
+        alreadywon = 0;
         pieces = new string[42];
     }
     
