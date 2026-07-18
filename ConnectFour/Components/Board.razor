@@ -40,12 +40,27 @@
     
 </div>
 
-
+<div class="container mt-4">
+    <div class="row">
+        <h2 class="col-12 text-center">Score Board</h2>
+    </div>
+    <div class="row">
+        <h3 class="col-5 text-center border-bottom">Player 1</h3>
+        <div class="col-2"></div>
+        <h3 class="col-5 text-center border-bottom">Player 2</h3>
+    </div>
+    <div class="row">
+        <div class="col-5 text-center">@Player1Wins win(s)</div>
+        <div class="col-2"></div>
+        <div class="col-5 text-center">@Player2Wins win(s)</div>
+    </div>
+</div>
 
 
 @code {
     private string[] pieces = new string[42];
     private string winnerMessage = string.Empty;
+    private int winner = 0;
     private string errorMessage = string.Empty;
 
     private string CurrentTurn => (winnerMessage == string.Empty) ? $"Player {State.PlayerTurn}'s Turn" : "";
@@ -58,6 +73,8 @@
 
     [Parameter]
     public Color Player2Color { get; set; } = ColorTranslator.FromHtml("blue");
+    private int Player1Wins = 0;
+    private int Player2Wins = 0;
     protected override void OnInitialized()
     {
         State.ResetBoard();
@@ -76,6 +93,18 @@
         {
             errorMessage = ex.Message;
         }
+        winner = State.CheckForWin() switch
+        {
+            GameState.WinState.Player1_Wins => 1,
+            GameState.WinState.Player2_Wins => 2,
+            GameState.WinState.Tie => 0,
+            _ => 0
+        };
+        if(winner == 1){
+            Player1Wins += 1;
+        } else if (winner == 2){
+            Player2Wins += 1;
+        }
         winnerMessage = State.CheckForWin() switch
         {
             GameState.WinState.Player1_Wins => "Player 1 Wins!",
@@ -89,6 +118,7 @@
         State.ResetBoard();
         winnerMessage = string.Empty;
         errorMessage = string.Empty;
+        winner = 0;
         pieces = new string[42];
     }
     
